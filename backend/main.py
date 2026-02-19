@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from api.stories import router as stories_router
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 
 @app.get("/health")
