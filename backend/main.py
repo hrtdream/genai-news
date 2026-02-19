@@ -8,4 +8,5 @@ app = FastAPI()
 def health_check():
     return {"status": "ok"}
 
+
 app.include_router(stories_router)

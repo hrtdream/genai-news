@@ -82,7 +82,7 @@ def get_stories(page: int = Query(1, ge=1)):
     }
 
 
-@router.get("/stories/{story_id}", response_model=StoryDetail)
+@router.get("/story/{story_id}", response_model=StoryDetail)
 def get_story_detail(story_id: str):
     if not mongo_client or not MONGO_DATABASE or not MONGO_COLLECTION:
         raise HTTPException(status_code=500, detail="Database not configured")
