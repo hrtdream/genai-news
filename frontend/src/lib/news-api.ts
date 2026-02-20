@@ -33,7 +33,16 @@ export type StoryDetail = {
 };
 
 function resolveApiUrl(path: string): string {
-  return path;
+  if (typeof window !== "undefined") {
+    return path;
+  }
+
+  const internalBaseUrl = process.env.INTERNAL_BASE_URL;
+  if (!internalBaseUrl) {
+    throw new Error("INTERNAL_BASE_URL is not set");
+  }
+
+  return new URL(path, internalBaseUrl).toString();
 }
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
