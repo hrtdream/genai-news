@@ -1,5 +1,6 @@
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query
+import pysbd
 from pymongo import DESCENDING
 
 from db.mongo import MONGO_COLLECTION, MONGO_DATABASE, mongo_client
@@ -8,6 +9,7 @@ from schemas.story import StoryDetail, StoriesResponse
 router = APIRouter()
 
 PAGE_SIZE = 10
+SEGMENTER = pysbd.Segmenter(language="en", clean=False)
 
 
 @router.get("/stories", response_model=StoriesResponse)
@@ -97,7 +99,7 @@ def get_story_detail(story_id: str):
     return {
         "id": str(doc.get("_id")),
         "headline": doc.get("headline"),
-        "summary": doc.get("summary"),
+        "summary": SEGMENTER.segment(doc.get("summary")),
         "cover_images": doc.get("cover_images"),
         "latest_ref_article_at": doc.get("latest_ref_article_at"),
         "ref_articles": doc.get("ref_articles"),

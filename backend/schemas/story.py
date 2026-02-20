@@ -33,7 +33,7 @@ class RefArticle(BaseModel):
 class StoryDetail(BaseModel):
     id: str
     headline: str
-    summary: str
+    summary: list[str]
     cover_images: list[str]
     latest_ref_article_at: datetime
     ref_articles: list[RefArticle]
