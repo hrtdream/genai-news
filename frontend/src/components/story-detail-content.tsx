@@ -13,6 +13,22 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
   const router = useRouter();
   const [activeImage, setActiveImage] = useState(0);
   const summaryBullets = story.summary.filter((sentence) => sentence.trim());
+  const sortedRefArticles = [...story.ref_articles].sort((a, b) => {
+    const aTimestamp = Date.parse(a.update_date);
+    const bTimestamp = Date.parse(b.update_date);
+
+    if (Number.isNaN(aTimestamp) && Number.isNaN(bTimestamp)) {
+      return 0;
+    }
+    if (Number.isNaN(aTimestamp)) {
+      return 1;
+    }
+    if (Number.isNaN(bTimestamp)) {
+      return -1;
+    }
+
+    return bTimestamp - aTimestamp;
+  });
 
   return (
     <main className="mx-auto w-[min(1100px,94vw)] py-8 md:py-12">
@@ -102,13 +118,13 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
           </h2>
           <div className="sources-divider" />
           <span className="sources-count" style={{ flexShrink: 0 }}>
-            {story.ref_articles.length}{" "}
-            {story.ref_articles.length === 1 ? "source" : "sources"}
+            {sortedRefArticles.length}{" "}
+            {sortedRefArticles.length === 1 ? "source" : "sources"}
           </span>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          {story.ref_articles.map((ref, index) => {
+          {sortedRefArticles.map((ref, index) => {
             const title = ref.title.trim();
             const source = ref.source.trim();
             const publishedAt = ref.update_date.trim();
