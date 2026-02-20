@@ -10,19 +10,6 @@ router = APIRouter()
 PAGE_SIZE = 10
 
 
-def _extract_cover_images(ref_articles):
-    if not ref_articles:
-        return []
-    images = []
-    seen = set()
-    for ref in ref_articles:
-        image = ref.get("cover_image")
-        if image and image not in seen:
-            seen.add(image)
-            images.append(image)
-    return images
-
-
 @router.get("/stories", response_model=StoriesResponse)
 def get_stories(page: int = Query(1, ge=1)):
     if not mongo_client or not MONGO_DATABASE or not MONGO_COLLECTION:
@@ -50,7 +37,7 @@ def get_stories(page: int = Query(1, ge=1)):
                 "_id": 1,
                 "headline": 1,
                 "latest_ref_article_at": 1,
-                "ref_articles": 1,
+                "cover_images": 1,
             },
         )
         .sort("latest_ref_article_at", DESCENDING)
@@ -58,18 +45,15 @@ def get_stories(page: int = Query(1, ge=1)):
         .limit(PAGE_SIZE)
     )
 
-    items = []
-    for doc in cursor:
-        ref_articles = doc.get("ref_articles") or []
-        cover_images = _extract_cover_images(ref_articles)
-        items.append(
-            {
-                "id": str(doc.get("_id")),
-                "headline": doc.get("headline"),
-                "latest_ref_article_at": doc.get("latest_ref_article_at"),
-                "cover_images": cover_images,
-            }
-        )
+    items = [
+        {
+            "id": str(doc.get("_id")),
+            "headline": doc.get("headline"),
+            "latest_ref_article_at": doc.get("latest_ref_article_at"),
+            "cover_images": doc.get("cover_images"),
+        }
+        for doc in cursor
+    ]
 
     return {
         "items": items,
@@ -98,19 +82,23 @@ def get_story_detail(story_id: str):
             "headline": 1,
             "summary": 1,
             "latest_ref_article_at": 1,
-            "ref_articles": 1,
+            "cover_images": 1,
+            "ref_articles.article_id": 1,
+            "ref_articles.url": 1,
+            "ref_articles.title": 1,
+            "ref_articles.update_date": 1,
+            "ref_articles.source": 1,
         },
     )
 
     if not doc:
         raise HTTPException(status_code=404, detail="Story not found")
 
-    ref_articles = doc.get("ref_articles") or []
     return {
         "id": str(doc.get("_id")),
         "headline": doc.get("headline"),
         "summary": doc.get("summary"),
-        "cover_images": _extract_cover_images(ref_articles),
+        "cover_images": doc.get("cover_images"),
         "latest_ref_article_at": doc.get("latest_ref_article_at"),
-        "ref_articles": ref_articles,
+        "ref_articles": doc.get("ref_articles"),
     }

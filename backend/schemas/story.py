@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Any
 
 from pydantic import BaseModel
 
@@ -23,10 +22,18 @@ class StoriesResponse(BaseModel):
     pagination: Pagination
 
 
+class RefArticle(BaseModel):
+    article_id: str
+    url: str
+    title: str
+    update_date: datetime
+    source: str
+
+
 class StoryDetail(BaseModel):
     id: str
     headline: str
     summary: str
     cover_images: list[str]
     latest_ref_article_at: datetime
-    ref_articles: list[dict[str, Any]]
+    ref_articles: list[RefArticle]
