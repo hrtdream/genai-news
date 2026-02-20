@@ -61,22 +61,11 @@ export default function RootLayout({
               style={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
                 padding: "0.55rem 0",
                 borderBottom: "1px solid var(--border)",
               }}
             >
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.66rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase" as const,
-                  color: "var(--muted)",
-                }}
-              >
-                Generative AI · Intelligence
-              </span>
               <span
                 style={{
                   fontFamily: "var(--font-mono)",

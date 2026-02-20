@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatDate, type StoryDetail } from "@/lib/news-api";
 import StoryImageCarousel from "@/components/story-image-carousel";
 
@@ -10,16 +10,21 @@ type StoryDetailContentProps = {
 };
 
 export default function StoryDetailContent({ story }: StoryDetailContentProps) {
+  const router = useRouter();
   const [activeImage, setActiveImage] = useState(0);
   const summaryBullets = story.summary.filter((sentence) => sentence.trim());
 
   return (
     <main className="mx-auto w-[min(1100px,94vw)] py-8 md:py-12">
       <div className="mb-7">
-        <Link href="/" className="btn-ghost">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="btn-ghost"
+        >
           <span aria-hidden="true">←</span>
-          Back to feed
-        </Link>
+          Back
+        </button>
       </div>
 
       <article className="detail-article">
@@ -34,7 +39,7 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
         />
 
         <div className="p-6 md:p-9 lg:p-11">
-          <p className="detail-section-label">◆ Intelligence Report</p>
+          <p className="detail-section-label">◆ Story Brief</p>
 
           <h1 className="detail-headline">{story.headline}</h1>
 
@@ -86,7 +91,7 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
           <h2
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "1.25rem",
+              fontSize: "1.35rem",
               fontWeight: 600,
               color: "var(--heading)",
               margin: 0,
@@ -148,7 +153,7 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-ghost"
-                    style={{ fontSize: "0.68rem", padding: "0.35rem 0.85rem" }}
+                    style={{ fontSize: "0.74rem", padding: "0.38rem 0.9rem" }}
                   >
                     Read source ↗
                   </a>

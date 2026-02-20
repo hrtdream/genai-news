@@ -122,7 +122,7 @@ button:focus-visible {
 
 .story-card-headline {
   font-family: var(--font-display), serif;
-  font-size: 1.12rem;
+  font-size: 1.2rem;
   font-weight: 600;
   line-height: 1.38;
   color: var(--heading);
@@ -145,7 +145,7 @@ button:focus-visible {
 
 .story-card-meta {
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 0.07em;
   color: var(--muted);
 }
@@ -187,7 +187,7 @@ button:focus-visible {
 
 .ref-card-title {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--heading);
   line-height: 1.45;
@@ -200,7 +200,7 @@ button:focus-visible {
 
 .ref-card-source {
   font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--primary);
@@ -209,7 +209,7 @@ button:focus-visible {
 
 .ref-card-date {
   font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   letter-spacing: 0.05em;
   color: var(--muted);
 }
@@ -318,7 +318,7 @@ button:focus-visible {
 
 .detail-summary-item {
   font-family: var(--font-body), sans-serif;
-  font-size: 1.02rem;
+  font-size: 1.12rem;
   line-height: 1.75;
   color: var(--foreground);
   position: relative;
@@ -339,7 +339,7 @@ button:focus-visible {
 
 .detail-meta {
   font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
@@ -353,7 +353,7 @@ button:focus-visible {
 
 .sources-count {
   font-family: var(--font-mono), monospace;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);

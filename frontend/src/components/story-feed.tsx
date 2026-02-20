@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { type KeyboardEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { type StoryItem, fetchStories, formatDate } from "@/lib/news-api";
 import StoryImageCarousel from "@/components/story-image-carousel";
 
@@ -16,6 +16,7 @@ export default function StoryFeed({
   initialPage,
   initialHasNext,
 }: StoryFeedProps) {
+  const router = useRouter();
   const [items, setItems] = useState<StoryItem[]>(initialItems);
   const [page, setPage] = useState(initialPage);
   const [hasNext, setHasNext] = useState(initialHasNext);
@@ -81,26 +82,21 @@ export default function StoryFeed({
     }
   };
 
+  const handleCardNavigate = (storyId: string) => {
+    router.push(`/story/${storyId}`);
+  };
+
   return (
     <section aria-label="Story feed">
       {/* Feed header */}
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="story-card-label" style={{ marginBottom: "0.4rem" }}>
+          <p
+            className="story-card-label"
+            style={{ marginBottom: 0, fontSize: "0.92rem" }}
+          >
             ◆ Latest dispatches
           </p>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.5rem, 3vw, 2rem)",
-              fontWeight: 600,
-              color: "var(--heading)",
-              lineHeight: 1.15,
-              margin: 0,
-            }}
-          >
-            Intelligence Feed
-          </h2>
         </div>
 
         <button
@@ -148,7 +144,28 @@ export default function StoryFeed({
         {items.map((story, index) => (
           <article
             key={story.id}
-            className="story-card card-enter"
+            role="link"
+            tabIndex={0}
+            aria-label={`Open story: ${story.headline}`}
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              if (target.closest("button,a")) {
+                return;
+              }
+              handleCardNavigate(story.id);
+            }}
+            onKeyDown={(event: KeyboardEvent<HTMLElement>) => {
+              const target = event.target as HTMLElement;
+              if (target.closest("button,a")) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleCardNavigate(story.id);
+              }
+            }}
+            className="story-card card-enter flex h-full cursor-pointer flex-col focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             style={{ animationDelay: `${(index % 10) * 65}ms` }}
           >
             <StoryImageCarousel
@@ -161,17 +178,9 @@ export default function StoryFeed({
               dotsWrapperClassName="absolute right-3 bottom-3 flex gap-1.5 rounded-sm bg-black/50 px-2 py-1"
             />
 
-            <div className="p-5">
-              <p className="story-card-label">◆ AI Intelligence</p>
-              <h3 className="story-card-headline">
-                <Link
-                  href={`/story/${story.id}`}
-                  className="rounded-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-1"
-                >
-                  {story.headline}
-                </Link>
-              </h3>
-              <p className="story-card-meta">
+            <div className="flex flex-1 flex-col p-5">
+              <h3 className="story-card-headline">{story.headline}</h3>
+              <p className="story-card-meta mt-auto pt-2">
                 {formatDate(story.latest_ref_article_at)}
               </p>
             </div>
