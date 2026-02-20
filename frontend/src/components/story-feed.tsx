@@ -50,7 +50,9 @@ export default function StoryFeed({
       setPage(response.pagination.page);
       setHasNext(response.pagination.has_next);
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : "Failed to load more");
+      setLoadError(
+        error instanceof Error ? error.message : "Failed to load more",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -81,96 +83,135 @@ export default function StoryFeed({
 
   return (
     <section aria-label="Story feed">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-3xl font-semibold tracking-tight text-heading">
-          Latest stories
-        </h2>
+      {/* Feed header */}
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="story-card-label" style={{ marginBottom: "0.4rem" }}>
+            ◆ Latest dispatches
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.5rem, 3vw, 2rem)",
+              fontWeight: 600,
+              color: "var(--heading)",
+              lineHeight: 1.15,
+              margin: 0,
+            }}
+          >
+            Intelligence Feed
+          </h2>
+        </div>
+
         <button
           type="button"
           onClick={refreshLatest}
           disabled={isRefreshing || isLoading}
-          className="cursor-pointer rounded-full border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors duration-200 hover:bg-red-50 disabled:cursor-not-allowed disabled:border-red-100 disabled:text-red-300"
+          className="btn-ghost"
         >
-          <span className="inline-flex items-center gap-2">
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-            >
-              <path
-                d="M20 12a8 8 0 1 1-2.34-5.66"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              <path
-                d="M20 4v6h-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {isRefreshing ? "Refreshing..." : "Refresh"}
-          </span>
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            style={{
+              width: "0.85rem",
+              height: "0.85rem",
+            }}
+            className={isRefreshing ? "animate-spin" : ""}
+          >
+            <path
+              d="M20 12a8 8 0 1 1-2.34-5.66"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <path
+              d="M20 4v6h-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {isRefreshing ? "Refreshing" : "Refresh"}
         </button>
       </div>
+
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-amber-200 bg-white p-6 text-amber-900 shadow-sm">
-          No visible stories yet. Backend returned an empty `items` array.
+        <div className="empty-state">
+          No stories available. Backend returned an empty response.
         </div>
       ) : null}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {items.map((story) => (
+      <div className="grid gap-5 md:grid-cols-2">
+        {items.map((story, index) => (
           <article
             key={story.id}
-            className="group overflow-hidden rounded-2xl border border-red-200 bg-white/95 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+            className="story-card card-enter"
+            style={{ animationDelay: `${(index % 10) * 65}ms` }}
           >
             <StoryImageCarousel
               images={story.cover_images}
               activeIndex={activeImageByStory[story.id] ?? 0}
               onChange={(nextIndex) => setActiveImage(story.id, nextIndex)}
               heightClassName="h-52"
-              prevButtonClassName="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-full bg-black/45 px-2.5 py-1.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-black/65"
-              nextButtonClassName="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full bg-black/45 px-2.5 py-1.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-black/65"
-              dotsWrapperClassName="absolute right-3 bottom-3 flex gap-1.5 rounded-full bg-black/35 px-2 py-1"
+              prevButtonClassName="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer rounded-sm bg-black/60 px-2.5 py-1.5 text-xs text-white/85 transition-colors duration-200 hover:bg-black/80"
+              nextButtonClassName="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-sm bg-black/60 px-2.5 py-1.5 text-xs text-white/85 transition-colors duration-200 hover:bg-black/80"
+              dotsWrapperClassName="absolute right-3 bottom-3 flex gap-1.5 rounded-sm bg-black/50 px-2 py-1"
             />
 
             <div className="p-5">
-              <h3 className="mb-2 line-clamp-2 text-xl font-semibold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-red-700">
+              <p className="story-card-label">◆ AI Intelligence</p>
+              <h3 className="story-card-headline">
                 <Link
                   href={`/story/${story.id}`}
-                  className="rounded-sm focus-visible:outline-3 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
+                  className="rounded-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-1"
                 >
                   {story.headline}
                 </Link>
               </h3>
-              <p className="text-sm text-muted">
-                Latest reference: {formatDate(story.latest_ref_article_at)}
+              <p className="story-card-meta">
+                {formatDate(story.latest_ref_article_at)}
               </p>
             </div>
           </article>
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col items-center gap-3">
+      <div className="mt-10 flex flex-col items-center gap-3">
         {hasNext ? (
           <button
             type="button"
             onClick={loadMore}
             disabled={isLoading}
-            className="cursor-pointer rounded-full border border-blue-200 bg-blue-800 px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-900 disabled:cursor-not-allowed disabled:border-blue-100 disabled:bg-blue-300"
+            className="btn-primary"
           >
-            {isLoading ? "Loading..." : "Load more stories"}
+            {isLoading ? "Loading..." : "Load more dispatches"}
           </button>
-        ) : (
-          <p className="text-sm text-muted">You have reached the end of the feed.</p>
-        )}
+        ) : items.length > 0 ? (
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.62rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
+          >
+            — End of feed —
+          </p>
+        ) : null}
+
         {loadError ? (
-          <p role="status" className="text-sm text-red-700">
+          <p
+            role="status"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.68rem",
+              color: "var(--error)",
+            }}
+          >
             {loadError}
           </p>
         ) : null}

@@ -31,7 +31,7 @@ export default function StoryImageCarousel({
   };
 
   return (
-    <div className={`relative bg-red-50 ${heightClassName}`}>
+    <div className={`relative ${heightClassName}`}>
       {currentImage ? (
         <div
           className="h-full w-full bg-cover bg-center"
@@ -39,7 +39,7 @@ export default function StoryImageCarousel({
           aria-hidden="true"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-sm text-slate-500">
+        <div className={`carousel-no-image h-full w-full`}>
           No cover image
         </div>
       )}

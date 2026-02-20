@@ -17,9 +17,9 @@ export default async function Home() {
   if (errorMessage) {
     return (
       <main className="mx-auto w-[min(1100px,94vw)] py-10">
-        <section className="rounded-2xl border border-red-300 bg-white p-5 text-red-800">
-          <h1 className="mb-2 text-xl font-semibold">Backend unavailable</h1>
-          <p className="text-sm">{errorMessage}</p>
+        <section className="error-state">
+          <p className="error-state-title">Backend unavailable</p>
+          <p>{errorMessage}</p>
         </section>
       </main>
     );

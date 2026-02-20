@@ -15,53 +15,94 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
 
   return (
     <main className="mx-auto w-[min(1100px,94vw)] py-8 md:py-12">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="cursor-pointer rounded-full border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors duration-200 hover:bg-red-50"
-        >
-          Back to stories
+      <div className="mb-7">
+        <Link href="/" className="btn-ghost">
+          <span aria-hidden="true">←</span>
+          Back to feed
         </Link>
       </div>
 
-      <article className="overflow-hidden rounded-3xl border border-red-200/80 bg-white/95 shadow-sm">
+      <article className="detail-article">
         <StoryImageCarousel
           images={story.cover_images}
           activeIndex={activeImage}
           onChange={setActiveImage}
           heightClassName="h-72 md:h-96"
-          prevButtonClassName="absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer rounded-full bg-black/45 px-3 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-black/65"
-          nextButtonClassName="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer rounded-full bg-black/45 px-3 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-black/65"
-          dotsWrapperClassName="absolute right-4 bottom-4 flex gap-1.5 rounded-full bg-black/35 px-2 py-1"
+          prevButtonClassName="absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer rounded-sm bg-black/60 px-3 py-2 text-sm text-white/85 transition-colors duration-200 hover:bg-black/80"
+          nextButtonClassName="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer rounded-sm bg-black/60 px-3 py-2 text-sm text-white/85 transition-colors duration-200 hover:bg-black/80"
+          dotsWrapperClassName="absolute right-4 bottom-4 flex gap-1.5 rounded-sm bg-black/50 px-2 py-1"
         />
 
-        <div className="p-6 md:p-8">
-          <p className="mb-3 text-sm font-medium uppercase tracking-[0.18em] text-red-700">
-            Story Detail
-          </p>
-          <h1 className="mb-4 text-2xl leading-tight font-semibold tracking-tight text-slate-900 md:text-3xl">
-            {story.headline}
-          </h1>
+        <div className="p-6 md:p-9 lg:p-11">
+          <p className="detail-section-label">◆ Intelligence Report</p>
+
+          <h1 className="detail-headline">{story.headline}</h1>
 
           {summaryBullets.length > 0 ? (
-            <ul className="mb-5 list-disc space-y-3 pl-6 text-[1.06rem] leading-8 font-medium text-slate-700 marker:text-blue-800 md:text-lg">
-              {summaryBullets.map((sentence, index) => (
-                <li key={`${story.id}-summary-${index}`}>{sentence}</li>
-              ))}
-            </ul>
+            <div
+              style={{
+                borderLeft: "2px solid var(--primary-border)",
+                paddingLeft: "1.5rem",
+                marginBottom: "2rem",
+              }}
+            >
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                {summaryBullets.map((sentence, index) => (
+                  <li
+                    key={`${story.id}-summary-${index}`}
+                    className="detail-summary-item"
+                  >
+                    {sentence}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : null}
 
-          <p className="text-sm text-muted">
-            Latest reference at {formatDate(story.latest_ref_article_at)}
+          <p className="detail-meta">
+            Latest reference — {formatDate(story.latest_ref_article_at)}
           </p>
         </div>
       </article>
 
-      <section className="mt-8">
-        <h2 className="mb-4 text-2xl font-semibold text-heading">
-          Reference articles
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <section className="mt-10">
+        <div
+          className="mb-5"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.25rem",
+              fontWeight: 600,
+              color: "var(--heading)",
+              margin: 0,
+              flexShrink: 0,
+            }}
+          >
+            Source Articles
+          </h2>
+          <div className="sources-divider" />
+          <span className="sources-count" style={{ flexShrink: 0 }}>
+            {story.ref_articles.length}{" "}
+            {story.ref_articles.length === 1 ? "source" : "sources"}
+          </span>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
           {story.ref_articles.map((ref, index) => {
             const title = ref.title.trim();
             const source = ref.source.trim();
@@ -70,29 +111,46 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
             const itemKey = ref.article_id || url || `${story.id}-${index}`;
 
             return (
-              <article
-                key={itemKey}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-              >
-                <p className="line-clamp-2 text-base font-semibold text-slate-900">
-                  {title || `Reference ${index + 1}`}
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {source || "Unknown source"}
-                </p>
-                {publishedAt ? (
-                  <p className="mt-1 text-xs text-slate-500">
-                    {formatDate(publishedAt)}
-                  </p>
-                ) : null}
+              <article key={itemKey} className="ref-card">
+                <p className="ref-card-title">{title || `Reference ${index + 1}`}</p>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginBottom: "0.8rem",
+                  }}
+                >
+                  {source ? (
+                    <span className="ref-card-source">{source}</span>
+                  ) : null}
+                  {source && publishedAt ? (
+                    <span
+                      style={{
+                        color: "var(--border-strong)",
+                        fontSize: "0.7rem",
+                      }}
+                    >
+                      /
+                    </span>
+                  ) : null}
+                  {publishedAt ? (
+                    <span className="ref-card-date">
+                      {formatDate(publishedAt)}
+                    </span>
+                  ) : null}
+                </div>
+
                 {url ? (
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex cursor-pointer rounded-full border border-blue-200 bg-white px-3.5 py-1.5 text-xs font-medium text-blue-800 transition-colors duration-200 hover:bg-blue-50 focus-visible:outline-3 focus-visible:outline-blue-700 focus-visible:outline-offset-2"
+                    className="btn-ghost"
+                    style={{ fontSize: "0.57rem", padding: "0.3rem 0.75rem" }}
                   >
-                    Read source
+                    Read source ↗
                   </a>
                 ) : null}
               </article>
