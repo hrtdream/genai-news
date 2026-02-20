@@ -202,13 +202,13 @@ export default function StoryFeed({
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.72rem",
+              fontSize: "0.8rem",
               letterSpacing: "0.18em",
               textTransform: "uppercase",
               color: "var(--muted)",
             }}
           >
-            — End of feed —
+            — End of dispatches —
           </p>
         ) : null}
 
