@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import { formatDate, type StoryDetail } from "@/lib/news-api";
 import StoryImageCarousel from "@/components/story-image-carousel";
 
@@ -82,7 +83,13 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
                     key={`${story.id}-summary-${index}`}
                     className="detail-summary-item"
                   >
-                    {sentence}
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <>{children}</>,
+                      }}
+                    >
+                      {sentence}
+                    </ReactMarkdown>
                   </li>
                 ))}
               </ul>
