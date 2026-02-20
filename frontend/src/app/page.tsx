@@ -1,6 +1,8 @@
 import StoryFeed from "@/components/story-feed";
 import { type StoriesResponse, fetchStories } from "@/lib/news-api";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   let stories: StoriesResponse | null = null;
   let errorMessage = "";
