@@ -1,10 +1,31 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { JetBrains_Mono, Outfit, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "GenAI News",
   description: "Curated stories from the frontier of Generative AI",
 };
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "600", "700"],
+  variable: "--font-display-google",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono-google",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-body-google",
+});
 
 export default function RootLayout({
   children,
@@ -20,19 +41,10 @@ export default function RootLayout({
     .toUpperCase();
 
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html
+      lang="en"
+      className={`${playfairDisplay.variable} ${jetBrainsMono.variable} ${outfit.variable}`}
+    >
       <body className="antialiased">
         <header
           style={{ background: "var(--background)", paddingTop: "1.5rem" }}
@@ -57,7 +69,7 @@ export default function RootLayout({
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.57rem",
+                  fontSize: "0.66rem",
                   letterSpacing: "0.18em",
                   textTransform: "uppercase" as const,
                   color: "var(--muted)",
@@ -68,7 +80,7 @@ export default function RootLayout({
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.57rem",
+                  fontSize: "0.66rem",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase" as const,
                   color: "var(--muted)",
@@ -86,7 +98,7 @@ export default function RootLayout({
                 borderBottom: "1px solid var(--border)",
               }}
             >
-              <a
+              <Link
                 href="/"
                 style={{
                   fontFamily: "var(--font-display)",
@@ -100,11 +112,11 @@ export default function RootLayout({
                 }}
               >
                 GenAI News
-              </a>
+              </Link>
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.58rem",
+                  fontSize: "0.66rem",
                   letterSpacing: "0.28em",
                   textTransform: "uppercase" as const,
                   color: "var(--muted)",

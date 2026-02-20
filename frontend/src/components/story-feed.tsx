@@ -193,7 +193,7 @@ export default function StoryFeed({
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.62rem",
+              fontSize: "0.72rem",
               letterSpacing: "0.18em",
               textTransform: "uppercase",
               color: "var(--muted)",
@@ -208,7 +208,7 @@ export default function StoryFeed({
             role="status"
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.68rem",
+              fontSize: "0.78rem",
               color: "var(--error)",
             }}
           >

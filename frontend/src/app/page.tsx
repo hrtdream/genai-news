@@ -27,6 +27,7 @@ export default async function Home() {
 
   return (
     <main className="mx-auto w-[min(1100px,94vw)] py-10">
+      <h1 className="sr-only">GenAI News: Latest Generative AI stories</h1>
       <StoryFeed
         initialItems={stories?.items ?? []}
         initialPage={stories?.pagination.page ?? 1}

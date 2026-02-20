@@ -148,7 +148,7 @@ export default function StoryDetailContent({ story }: StoryDetailContentProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-ghost"
-                    style={{ fontSize: "0.57rem", padding: "0.3rem 0.75rem" }}
+                    style={{ fontSize: "0.68rem", padding: "0.35rem 0.85rem" }}
                   >
                     Read source ↗
                   </a>

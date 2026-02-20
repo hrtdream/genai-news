@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", "Courier New", monospace;
-  --font-body: "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-display-google), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-mono-google), "Courier New", monospace;
+  --font-body: var(--font-body-google), "Helvetica Neue", Arial, sans-serif;
 
   --background: #f8f5f0;
   --surface: #ffffff;
@@ -13,7 +13,7 @@
   --primary: #8b1c1c;
   --primary-glow: rgba(139, 28, 28, 0.06);
   --primary-border: rgba(139, 28, 28, 0.22);
-  --muted: #9b8f85;
+  --muted: #756a61;
   --border: #e4ddd4;
   --border-strong: #cdc4b8;
   --ring: #8b1c1c;
@@ -29,7 +29,7 @@
   --color-muted: var(--muted);
   --font-sans: var(--font-body);
   --font-serif: var(--font-display);
-  --font-mono: var(--font-mono);
+  --font-mono: var(--font-mono-google);
 }
 
 body {
@@ -112,7 +112,7 @@ button:focus-visible {
 
 .story-card-label {
   font-family: var(--font-mono), monospace;
-  font-size: 0.57rem;
+  font-size: 0.66rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--primary);
@@ -145,7 +145,7 @@ button:focus-visible {
 
 .story-card-meta {
   font-family: var(--font-mono), monospace;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   letter-spacing: 0.07em;
   color: var(--muted);
 }
@@ -200,7 +200,7 @@ button:focus-visible {
 
 .ref-card-source {
   font-family: var(--font-mono), monospace;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--primary);
@@ -209,7 +209,7 @@ button:focus-visible {
 
 .ref-card-date {
   font-family: var(--font-mono), monospace;
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.05em;
   color: var(--muted);
 }
@@ -222,7 +222,7 @@ button:focus-visible {
   justify-content: center;
   background: var(--surface-raised);
   font-family: var(--font-mono), monospace;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -235,7 +235,7 @@ button:focus-visible {
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-mono), monospace;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--foreground);
@@ -264,7 +264,7 @@ button:focus-visible {
 
 .btn-primary {
   font-family: var(--font-mono), monospace;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #fff;
@@ -299,7 +299,7 @@ button:focus-visible {
 
 .detail-section-label {
   font-family: var(--font-mono), monospace;
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--primary);
@@ -339,7 +339,7 @@ button:focus-visible {
 
 .detail-meta {
   font-family: var(--font-mono), monospace;
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
@@ -353,7 +353,7 @@ button:focus-visible {
 
 .sources-count {
   font-family: var(--font-mono), monospace;
-  font-size: 0.58rem;
+  font-size: 0.66rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -367,7 +367,7 @@ button:focus-visible {
   padding: 1.5rem;
   background: rgba(185, 28, 28, 0.04);
   font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--error);
 }
 
@@ -384,7 +384,7 @@ button:focus-visible {
   padding: 1.5rem;
   background: var(--surface);
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.05em;
   color: var(--muted);
 }
