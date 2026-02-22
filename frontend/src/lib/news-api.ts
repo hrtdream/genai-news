@@ -37,12 +37,12 @@ function resolveApiUrl(path: string): string {
     return path;
   }
 
-  const internalBaseUrl = process.env.INTERNAL_BASE_URL;
-  if (!internalBaseUrl) {
-    throw new Error("INTERNAL_BASE_URL is not set");
+  const serverApiUrl = process.env.SERVER_API_URL;
+  if (!serverApiUrl) {
+    throw new Error("SERVER_API_URL is not set");
   }
 
-  return new URL(path, internalBaseUrl).toString();
+  return new URL(path, serverApiUrl).toString();
 }
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {

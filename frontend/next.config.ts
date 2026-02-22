@@ -1,17 +1,17 @@
 import type { NextConfig } from "next";
 
-const apiProxyTarget = process.env.API_PROXY_TARGET;
+const serverApiUrl = process.env.SERVER_API_URL;
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    if (!apiProxyTarget) {
+    if (!serverApiUrl) {
       return [];
     }
 
     return [
       {
         source: "/api/:path*",
-        destination: `${apiProxyTarget}/api/:path*`,
+        destination: `${serverApiUrl}/api/:path*`,
       },
     ];
   },
