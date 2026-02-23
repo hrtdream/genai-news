@@ -17,6 +17,7 @@ SEGMENTER = pysbd.Segmenter(language="en", clean=False)
 def get_stories(
     page: int = Query(1, ge=1),
     collections: Optional[List[str]] = Query(None),
+    search: Optional[str] = Query(None),
 ):
     if not mongo_client or not MONGO_DATABASE or not MONGO_COLLECTION:
         return {
@@ -37,6 +38,12 @@ def get_stories(
 
     if collections:
         query["ref_articles.collection"] = {"$in": collections}
+        
+    if search:
+        query["$or"] = [
+            {"headline": {"$regex": search, "$options": "i"}},
+            {"summary": {"$regex": search, "$options": "i"}},
+        ]
 
     total = collection.count_documents(query)
     cursor = (
