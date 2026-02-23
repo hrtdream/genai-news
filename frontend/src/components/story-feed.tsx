@@ -25,6 +25,8 @@ export default function StoryFeed({
   const [page, setPage] = useState(initialPage);
   const [hasNext, setHasNext] = useState(initialHasNext);
   const [selectedCollections, setSelectedCollections] = useState<string[]>(initialCollections);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState("");
@@ -40,8 +42,12 @@ export default function StoryFeed({
 
   const getFetchOptions = useCallback(() => {
     const allSelected = selectedCollections.length === Object.keys(SOURCE_MAP).length;
-    return allSelected ? {} : { collections: selectedCollections };
-  }, [selectedCollections]);
+    const options: { collections?: string[]; search?: string } = allSelected ? {} : { collections: selectedCollections };
+    if (searchQuery.trim()) {
+      options.search = searchQuery.trim();
+    }
+    return options;
+  }, [selectedCollections, searchQuery]);
 
   const loadMore = async () => {
     if (isLoading || !hasNext || selectedCollections.length === 0) {
@@ -156,6 +162,11 @@ export default function StoryFeed({
     router.push(`/story/${storyId}`);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(searchInput);
+  };
+
   return (
     <section aria-label="Story feed">
       {/* Feed header */}
@@ -169,7 +180,22 @@ export default function StoryFeed({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <form onSubmit={handleSearch} className="flex-1 sm:flex-none relative">
+            <input
+              type="search"
+              placeholder="Search dispatches..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="w-full sm:w-64 rounded-md border border-gray-300 dark:border-gray-600 bg-transparent px-3 py-1.5 text-sm outline-none focus:border-black dark:focus:border-white transition-colors"
+            />
+            <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black dark:hover:text-white">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </form>
           <SourceDropdown
             selectedCollections={selectedCollections}
             onChange={setSelectedCollections}
@@ -216,8 +242,12 @@ export default function StoryFeed({
             <span className="text-gray-500">
               No dispatches available. Please select at least one source.
             </span>
+          ) : searchQuery ? (
+            <span className="text-gray-500">
+              No dispatches found matching &quot;{searchQuery}&quot;. Try different keywords.
+            </span>
           ) : (
-            "No stories available. Backend returned an empty response."
+            "No dispatches available."
           )}
         </div>
       ) : null}
