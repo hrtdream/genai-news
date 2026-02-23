@@ -79,6 +79,8 @@ export default function StoryFeed({
     if (selectedCollections.length === 0) {
       setItems([]);
       setHasNext(false);
+      setLoadError("");
+      setActiveImageByStory({});
       return;
     }
 
@@ -107,10 +109,15 @@ export default function StoryFeed({
       return;
     }
 
+    let isActive = true;
+
     const fetchFiltered = async () => {
       if (selectedCollections.length === 0) {
         setItems([]);
         setHasNext(false);
+        setLoadError("");
+        setActiveImageByStory({});
+        setIsLoading(false);
         return;
       }
 
@@ -119,20 +126,30 @@ export default function StoryFeed({
 
       try {
         const response = await fetchStories(1, getFetchOptions());
+        if (!isActive) return;
+        
         setItems(response.items);
         setPage(response.pagination.page);
         setHasNext(response.pagination.has_next);
         setActiveImageByStory({});
       } catch (error) {
+        if (!isActive) return;
+        
         setLoadError(
           error instanceof Error ? error.message : "Failed to filter stories",
         );
       } finally {
-        setIsLoading(false);
+        if (isActive) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchFiltered();
+
+    return () => {
+      isActive = false;
+    };
   }, [selectedCollections, getFetchOptions]);
 
   const handleCardNavigate = (storyId: string) => {
@@ -193,9 +210,21 @@ export default function StoryFeed({
         </div>
       </div>
 
-      {items.length === 0 ? (
+      {items.length === 0 && !isLoading ? (
         <div className="empty-state">
-          No stories available. Backend returned an empty response.
+          {selectedCollections.length === 0 ? (
+            <span className="text-gray-500">
+              No dispatches available. Please select at least one source.
+            </span>
+          ) : (
+            "No stories available. Backend returned an empty response."
+          )}
+        </div>
+      ) : null}
+
+      {items.length === 0 && isLoading ? (
+        <div className="empty-state animate-pulse text-gray-500">
+          Loading dispatches...
         </div>
       ) : null}
 
