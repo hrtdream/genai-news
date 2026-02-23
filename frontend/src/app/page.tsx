@@ -1,11 +1,14 @@
 import StoryFeed from "@/components/story-feed";
 import { type StoriesResponse, fetchStories } from "@/lib/news-api";
+import { SOURCE_MAP } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   let stories: StoriesResponse | null = null;
   let errorMessage = "";
+  
+  const defaultCollections = Object.values(SOURCE_MAP);
 
   try {
     stories = await fetchStories(1);
@@ -32,6 +35,7 @@ export default async function Home() {
         initialItems={stories?.items ?? []}
         initialPage={stories?.pagination.page ?? 1}
         initialHasNext={stories?.pagination.has_next ?? false}
+        initialCollections={defaultCollections}
       />
     </main>
   );

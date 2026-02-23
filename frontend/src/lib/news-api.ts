@@ -57,9 +57,18 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
 
 export async function fetchStories(
   page = 1,
-  init?: RequestInit,
+  options?: { collections?: string[] } & RequestInit,
 ): Promise<StoriesResponse> {
-  return fetchJson<StoriesResponse>(`/api/stories?page=${page}`, init);
+  const { collections, ...init } = options || {};
+  let url = `/api/stories?page=${page}`;
+  
+  if (collections && collections.length > 0) {
+    collections.forEach(c => {
+      url += `&collections=${encodeURIComponent(c)}`;
+    });
+  }
+  
+  return fetchJson<StoriesResponse>(url, init);
 }
 
 export async function fetchStoryDetail(
@@ -74,8 +83,21 @@ export function formatDate(value: string): string {
   if (Number.isNaN(date.getTime())) {
     return "Unknown date";
   }
-  return new Intl.DateTimeFormat("en-US", {
+  const formatted = new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
+  
+  // Normalize formatting differences between Node.js and browsers.
+  // We want to achieve 'Feb 23, 2026 at 12:49 PM'.
+  // Chrome uses 'Feb 23, 2026, 12:49 PM' (two commas).
+  // Node uses 'Feb 23, 2026 at 12:49 PM' (one comma + ' at ').
+  
+  const parts = formatted.split(", ");
+  if (parts.length === 3) {
+    // This is the Chrome case: [Month Day, Year, Time]
+    return `${parts[0]}, ${parts[1]} at ${parts[2]}`;
+  }
+  
+  return formatted;
 }

@@ -1,25 +1,30 @@
 "use client";
 
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { type StoryItem, fetchStories, formatDate } from "@/lib/news-api";
 import StoryImageCarousel from "@/components/story-image-carousel";
+import SourceDropdown from "@/components/source-dropdown";
+import { SOURCE_MAP } from "@/lib/constants";
 
 type StoryFeedProps = {
   initialItems: StoryItem[];
   initialPage: number;
   initialHasNext: boolean;
+  initialCollections?: string[];
 };
 
 export default function StoryFeed({
   initialItems,
   initialPage,
   initialHasNext,
+  initialCollections = [],
 }: StoryFeedProps) {
   const router = useRouter();
   const [items, setItems] = useState<StoryItem[]>(initialItems);
   const [page, setPage] = useState(initialPage);
   const [hasNext, setHasNext] = useState(initialHasNext);
+  const [selectedCollections, setSelectedCollections] = useState<string[]>(initialCollections);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState("");
@@ -27,12 +32,19 @@ export default function StoryFeed({
     Record<string, number>
   >({});
 
+  const isFirstRender = useRef(true);
+
   const setActiveImage = (storyId: string, index: number) => {
     setActiveImageByStory((prev) => ({ ...prev, [storyId]: index }));
   };
 
+  const getFetchOptions = useCallback(() => {
+    const allSelected = selectedCollections.length === Object.keys(SOURCE_MAP).length;
+    return allSelected ? {} : { collections: selectedCollections };
+  }, [selectedCollections]);
+
   const loadMore = async () => {
-    if (isLoading || !hasNext) {
+    if (isLoading || !hasNext || selectedCollections.length === 0) {
       return;
     }
 
@@ -41,7 +53,7 @@ export default function StoryFeed({
 
     try {
       const nextPage = page + 1;
-      const response = await fetchStories(nextPage);
+      const response = await fetchStories(nextPage, getFetchOptions());
 
       setItems((prev) => {
         const seen = new Set(prev.map((story) => story.id));
@@ -64,11 +76,17 @@ export default function StoryFeed({
       return;
     }
 
+    if (selectedCollections.length === 0) {
+      setItems([]);
+      setHasNext(false);
+      return;
+    }
+
     setIsRefreshing(true);
     setLoadError("");
 
     try {
-      const response = await fetchStories(1, { cache: "no-store" });
+      const response = await fetchStories(1, { ...getFetchOptions(), cache: "no-store" });
       setItems(response.items);
       setPage(response.pagination.page);
       setHasNext(response.pagination.has_next);
@@ -81,6 +99,41 @@ export default function StoryFeed({
       setIsRefreshing(false);
     }
   };
+
+  // Automatically fetch when filters change, but skip initial render
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const fetchFiltered = async () => {
+      if (selectedCollections.length === 0) {
+        setItems([]);
+        setHasNext(false);
+        return;
+      }
+
+      setIsLoading(true);
+      setLoadError("");
+
+      try {
+        const response = await fetchStories(1, getFetchOptions());
+        setItems(response.items);
+        setPage(response.pagination.page);
+        setHasNext(response.pagination.has_next);
+        setActiveImageByStory({});
+      } catch (error) {
+        setLoadError(
+          error instanceof Error ? error.message : "Failed to filter stories",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFiltered();
+  }, [selectedCollections, getFetchOptions]);
 
   const handleCardNavigate = (storyId: string) => {
     router.push(`/story/${storyId}`);
@@ -99,13 +152,18 @@ export default function StoryFeed({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={refreshLatest}
-          disabled={isRefreshing || isLoading}
-          className="btn-ghost"
-        >
-          <svg
+        <div className="flex items-center gap-2">
+          <SourceDropdown
+            selectedCollections={selectedCollections}
+            onChange={setSelectedCollections}
+          />
+          <button
+            type="button"
+            onClick={refreshLatest}
+            disabled={isRefreshing || isLoading}
+            className="btn-ghost"
+          >
+            <svg
             viewBox="0 0 24 24"
             aria-hidden="true"
             style={{
@@ -132,6 +190,7 @@ export default function StoryFeed({
           </svg>
           {isRefreshing ? "Refreshing" : "Refresh"}
         </button>
+        </div>
       </div>
 
       {items.length === 0 ? (
