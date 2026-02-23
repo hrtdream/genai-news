@@ -1,4 +1,5 @@
 from typing import List, Optional
+import re
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query
 import pysbd
@@ -40,9 +41,10 @@ def get_stories(
         query["ref_articles.collection"] = {"$in": collections}
         
     if search:
+        escaped_search = re.escape(search)
         query["$or"] = [
-            {"headline": {"$regex": search, "$options": "i"}},
-            {"summary": {"$regex": search, "$options": "i"}},
+            {"headline": {"$regex": f"\\b{escaped_search}\\b", "$options": "i"}},
+            {"summary": {"$regex": f"\\b{escaped_search}\\b", "$options": "i"}},
         ]
 
     total = collection.count_documents(query)

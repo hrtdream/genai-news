@@ -191,7 +191,7 @@ export default function StoryFeed({
             </svg>
             <input
               type="text"
-              placeholder="SEARCH DISPATCHES..."
+              placeholder="SEARCH"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full sm:w-64 border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--foreground)] pl-9 pr-8 py-[0.45rem] rounded-[2px] outline-none transition-colors placeholder:text-[var(--muted)] placeholder:opacity-70 focus:border-[var(--primary-border)] focus:bg-[var(--primary-glow)]"
