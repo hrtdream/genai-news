@@ -159,7 +159,7 @@ export default function StoryFeed({
   return (
     <section aria-label="Story feed">
       {/* Feed header */}
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <p
             className="story-card-label"
