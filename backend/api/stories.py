@@ -1,3 +1,4 @@
+from typing import List, Optional
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query
 import pysbd
@@ -13,7 +14,10 @@ SEGMENTER = pysbd.Segmenter(language="en", clean=False)
 
 
 @router.get("/stories", response_model=StoriesResponse)
-def get_stories(page: int = Query(1, ge=1)):
+def get_stories(
+    page: int = Query(1, ge=1),
+    collections: Optional[List[str]] = Query(None),
+):
     if not mongo_client or not MONGO_DATABASE or not MONGO_COLLECTION:
         return {
             "items": [],
@@ -30,6 +34,9 @@ def get_stories(page: int = Query(1, ge=1)):
     skip = (page - 1) * PAGE_SIZE
     collection = mongo_client[MONGO_DATABASE][MONGO_COLLECTION]
     query = {"is_active": True, "is_visible": True}
+
+    if collections:
+        query["ref_articles.collection"] = {"$in": collections}
 
     total = collection.count_documents(query)
     cursor = (
