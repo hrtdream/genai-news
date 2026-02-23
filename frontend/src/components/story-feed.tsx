@@ -181,20 +181,42 @@ export default function StoryFeed({
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <form onSubmit={handleSearch} className="flex-1 sm:flex-none relative">
+          <form onSubmit={handleSearch} className="flex-1 sm:flex-none relative group flex items-center">
+            <svg 
+              className="absolute left-3 text-[var(--muted)] group-focus-within:text-[var(--primary)] transition-colors" 
+              viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
             <input
-              type="search"
-              placeholder="Search dispatches..."
+              type="text"
+              placeholder="SEARCH DISPATCHES..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full sm:w-64 rounded-md border border-gray-300 dark:border-gray-600 bg-transparent px-3 py-1.5 text-sm outline-none focus:border-black dark:focus:border-white transition-colors"
+              className="w-full sm:w-64 border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--foreground)] pl-9 pr-8 py-[0.45rem] rounded-[2px] outline-none transition-colors placeholder:text-[var(--muted)] placeholder:opacity-70 focus:border-[var(--primary-border)] focus:bg-[var(--primary-glow)]"
+              style={{
+                fontFamily: "var(--font-mono), monospace",
+                fontSize: "0.72rem",
+                letterSpacing: "0.1em",
+              }}
             />
-            <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black dark:hover:text-white">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </button>
+            {searchInput && (
+              <button 
+                type="button" 
+                onClick={() => {
+                  setSearchInput("");
+                  setSearchQuery("");
+                }}
+                className="absolute right-2.5 text-[var(--muted)] hover:text-[var(--primary)] transition-colors"
+                aria-label="Clear search"
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            )}
           </form>
           <SourceDropdown
             selectedCollections={selectedCollections}

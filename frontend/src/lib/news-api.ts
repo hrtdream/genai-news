@@ -57,15 +57,19 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
 
 export async function fetchStories(
   page = 1,
-  options?: { collections?: string[] } & RequestInit,
+  options?: { collections?: string[]; search?: string } & RequestInit,
 ): Promise<StoriesResponse> {
-  const { collections, ...init } = options || {};
+  const { collections, search, ...init } = options || {};
   let url = `/api/stories?page=${page}`;
   
   if (collections && collections.length > 0) {
     collections.forEach(c => {
       url += `&collections=${encodeURIComponent(c)}`;
     });
+  }
+
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
   }
   
   return fetchJson<StoriesResponse>(url, init);
