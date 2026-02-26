@@ -16,7 +16,7 @@ SEGMENTER = pysbd.Segmenter(language="en", clean=False)
 
 @router.get("/stories", response_model=StoriesResponse)
 def get_stories(
-    page: int = 1,
+    page: Annotated[int, Query(ge=1)] = 1,
     collections: Annotated[list[str], Query()] = None,
     search: Annotated[str, Query()] = None,
 ):
