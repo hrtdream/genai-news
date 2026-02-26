@@ -30,6 +30,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "dvCBQCAcAT8gwL9-XZUEuU14TPog-NJEplTHqYQsGbs",
+  },
 };
 
 const playfairDisplay = Playfair_Display({
