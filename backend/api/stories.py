@@ -2,7 +2,6 @@ from typing import Annotated
 import re
 from bson import ObjectId
 from fastapi import APIRouter, HTTPException, Query
-from pydantic import SkipJsonSchema
 import pysbd
 from pymongo import DESCENDING
 
@@ -18,8 +17,8 @@ SEGMENTER = pysbd.Segmenter(language="en", clean=False)
 @router.get("/stories", response_model=StoriesResponse)
 def get_stories(
     page: int = 1,
-    collections: Annotated[list[str] | SkipJsonSchema[None], Query()] = None,
-    search: str | None = None,
+    collections: Annotated[list[str], Query()] = None,
+    search: Annotated[str, Query()] = None,
 ):
     if not mongo_client or not MONGO_DATABASE or not MONGO_COLLECTION:
         return {
