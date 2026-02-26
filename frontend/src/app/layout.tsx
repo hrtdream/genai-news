@@ -1,11 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JetBrains_Mono, Outfit, Playfair_Display } from "next/font/google";
+import { CONTACT_EMAIL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GenAI News",
-  description: "Curated stories from the frontier of Generative AI",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 const playfairDisplay = Playfair_Display({
@@ -118,6 +142,26 @@ export default function RootLayout({
           </div>
         </header>
         {children}
+        <footer className="mx-auto w-[min(1100px,94vw)] border-t border-[var(--border)] py-8">
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.72rem",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
+          >
+            Contact:
+            {" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              style={{ color: "var(--heading)", textDecoration: "underline" }}
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   );

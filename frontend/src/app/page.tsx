@@ -1,6 +1,7 @@
 import StoryFeed from "@/components/story-feed";
 import { type StoriesResponse, fetchStories } from "@/lib/news-api";
 import { SOURCE_MAP } from "@/lib/constants";
+import { CONTACT_EMAIL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -28,9 +29,26 @@ export default async function Home() {
     );
   }
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      email: CONTACT_EMAIL,
+    },
+  };
+
   return (
     <main className="mx-auto w-[min(1100px,94vw)] py-10">
       <h1 className="sr-only">GenAI News: Latest Generative AI stories</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <StoryFeed
         initialItems={stories?.items ?? []}
         initialPage={stories?.pagination.page ?? 1}
